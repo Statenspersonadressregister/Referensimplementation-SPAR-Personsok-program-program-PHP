@@ -5,7 +5,8 @@
 Referensimplementationen använder _PHP5_ och dess stöd för _SOAP_,
 [SoapClient](http://php.net/manual/en/book.soap.php).
 
-Lösningen är testad med _Apache HTTPD 2.4.6_, _PHP 5.4.16_ och _PHP SoapClient 5.4.16_.
+Lösningen är testad med _Apache HTTPD 2.4.6_, _PHP 5.4.16_ och _PHP SoapClient 5.4.16_. Dessa äldre versioner har säkerhetsbrister,
+vilket inte utgör ett problem för utveckling eller test. I produktion rekommenderar vi <u>**_starkt_**</u> att senaste stabila versionen används. 
 
 För mer detaljer om verksamhetsbegrepp och tjänster inom SPAR se gränssnittsmanualen som finns tillgänglig på
 [SPAR:s hemsida](https://www.statenspersonadressregister.se)
