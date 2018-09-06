@@ -23,9 +23,6 @@ _KundNrLeveransMottagare_, _KundNrSlutkund_ och _UppdragsId_. För mer informati
 
 Om verifiering av _CN_match_ används behöver den uppdateras för produktion.
 
-SPAR har bytt certifikatutfärdare vilket medför att anslutningar mot produktionsmiljön behöver använda
-medföljande _DigiCert.pem_ istället för Verisign.pem för att verifiera SPARs certifikat.
-
 **Vi rekommenderar starkt att klientcertifikatet skyddas så att ingen obehörig kan komma åt det i webbläsaren.**
 
 Exempel på hur man kan skapa certifikat i _PEM-format_ finns i gränssnittsmanualen.

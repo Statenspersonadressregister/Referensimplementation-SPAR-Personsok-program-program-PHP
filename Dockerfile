@@ -6,7 +6,6 @@ EXPOSE 80
 RUN apt-get update -y \
   && apt-get install -y \
     libxml2-dev \
-    php-soap \
 	git \
   && apt-get clean -y \
   && docker-php-ext-install soap

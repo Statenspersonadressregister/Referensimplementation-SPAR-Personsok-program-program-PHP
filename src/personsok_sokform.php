@@ -70,7 +70,7 @@
             </label>
 
             <label for="k3">Rootcertifikat/CA (PEM)
-                <input id="k3" name="ca" type="text" value="resurser/Verisign.pem"/>
+                <input id="k3" name="ca" type="text" value="resurser/DigiCert.pem"/>
             </label>
         </section>
 
