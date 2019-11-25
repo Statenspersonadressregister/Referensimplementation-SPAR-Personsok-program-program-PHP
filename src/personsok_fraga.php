@@ -13,7 +13,7 @@ function skickaFraga()
     }
 
     $client = skapaSoapClient();
-    return (array)$client->SPARPersonsokning($argument);
+    return (array) $client->PersonSok($argument);
 }
 
 function skapaSoapClient()
@@ -32,7 +32,8 @@ function skapaSoapClient()
         'stream_context' => $streamcontext);
 
     // För att SoapClient ska läsa in filen korrekt från disk behövs en file:// länk
-    $wsdl = 'file://' . dirname(__FILE__) . DIRECTORY_SEPARATOR . 'resurser/SPARPersonsokning.wsdl';
+    $wsdl = 'file://' . dirname(__FILE__) . DIRECTORY_SEPARATOR . 'resurser/personsok-2019.1.wsdl';
+
     return new SoapClient($wsdl, $options);
 }
 
