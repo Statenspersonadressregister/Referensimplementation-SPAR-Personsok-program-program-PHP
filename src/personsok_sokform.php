@@ -15,29 +15,34 @@
 
     function giltigtPersonId() {
         rensaAllaSokFalt();
-        document.getElementsByName("fysiskpersonid")[0].value = "197910312391";
+        document.getElementsByName("idnummer")[0].value = "197910312391";
     }
 
-    function ogiltigtPersonId() {
+    function skapaSoapFel() {
         rensaAllaSokFalt();
-        document.getElementsByName("fysiskpersonid")[0].value = "000000000000";
+        document.getElementsByName("idnummer")[0].value = "000000000000";
     }
 
     function fonetiskSokning() {
         rensaAllaSokFalt();
-        document.getElementsByName("fonetisksokning")[0].value = "J";
+        document.getElementsByName("fonetisksokning")[0].value = "JA";
         document.getElementsByName("namnsokargument")[0].value = "mikael efter*";
     }
 
     function forMangaTraffar() {
         rensaAllaSokFalt();
-        document.getElementsByName("fonetisksokning")[0].value = "J";
+        document.getElementsByName("fonetisksokning")[0].value = "JA";
         document.getElementsByName("namnsokargument")[0].value = "an*";
+    }
+
+    function skapaUndantag() {
+        rensaAllaSokFalt();
+        document.getElementsByName("namnsokargument")[0].value = "a*";
     }
 
     function ingenTraff() {
         rensaAllaSokFalt();
-        document.getElementsByName("fonetisksokning")[0].value = "N";
+        document.getElementsByName("fonetisksokning")[0].value = "NEJ";
         document.getElementsByName("namnsokargument")[0].value = "dethärnamnetfinnsinteispar";
     }
 </script>
@@ -46,24 +51,25 @@
 <section id="sokning">
     <h1>Sökning</h1>
     <p class='hjalptext'>
-        Sökningar kan antingen vara på PersonId->FysiskPersonId eller på övriga
-        persondetaljer. De representeras av dom två olika sökknapparna.
-        Se gränssnittssmanualen för vilka värden som är giltiga för respektive sökfält.</p>
+        Sökningar kan antingen vara på ID-nummer eller på Namn/adress sökparametrar. Se dokumentation under Teknisk info på
+        <a href="https://statenspersonadressregister.se/">SPAR:s hemsida</a>.
+    </p>
 
     <section id="exempel">
         <h1>Ladda in värden för olika exempel</h1>
-        <input type="button" value="Giltigt personid" onclick="giltigtPersonId()"/>
-        <input type="button" value="Ogiltigt personid" onclick="ogiltigtPersonId()"/>
-        <input type="button" value="Fonetisk sökning" onclick="fonetiskSokning()"/>
-        <input type="button" value="Ingen träff" onclick="ingenTraff()"/>
+        <input type="button" value="ID-nummer sök" onclick="giltigtPersonId()"/>
+        <input type="button" value="Namn/adress sök" onclick="fonetiskSokning()"/>
+        <input type="button" value="Inga träffar" onclick="ingenTraff()"/>
         <input type="button" value="För många träffar" onclick="forMangaTraffar()"/>
+        <input type="button" value="Undantag" onclick="skapaUndantag()"/>
+        <input type="button" value="SOAP-fel" onclick="skapaSoapFel()"/>
     </section>
 
     <form method='post' name='form_sokning'>
         <section id="kommunikation">
             <h1>Kommunikationsparametrar för SOAP-anropet</h1>
             <label for="k1"> URL till tjänst</label>
-            <input id="k1" name="url" type="text" value="https://kt-ext-ws.statenspersonadressregister.se/2019.1/"/>
+            <input id="k1" name="url" type="text" value="https://kt-ext-ws.statenspersonadressregister.se/2021.1/"/>
 
             <label for="k2">Klientcertifikat (PEM)
                 <input id="k2" name="certifikat" type="text" value="resurser/Kommun_A.pem"/>
@@ -75,7 +81,7 @@
         </section>
 
         <section id="identifiering">
-            <h1>IdentifieringsInformation</h1>
+            <h1>Identifieringsinformation</h1>
 
             <label for="i1">KundNrLeveransMottagare
                 <input id="i1" name="kundnrleveransmottagare" type="text" value="500243"/>
@@ -85,12 +91,8 @@
                 <input id="i2" name="kundnrslutkund" type="text" value="500243"/>
             </label>
 
-            <label for="i3">OrgNrSlutkund
-                <input id="i3" name="orgnrslutkund" type="text" value="0000000000"/>
-            </label>
-
             <label for="i4">SlutAnvandarId
-                <input id="i4" name="slutanvandarid" type="text" value="Testsökning PHP"/>
+                <input id="i4" name="slutanvandarid" type="text" value="Anställd X på avdelning B (Referensimplementation 2021.1 - PHP)"/>
             </label>
 
             <label for="i5">SlutAnvandarUtokadBehorighet
@@ -109,23 +111,23 @@
                 <input id="i8" name="slutanvandarutokadbehorighet4" type="text" value=""/>
             </label>
 
-            <label for="u1">UppdragsID
+            <label for="u1">Uppdrags-ID
                 <input id="u1" name="uppdragsid" type="text" value="637"/>
             </label>
         </section>
 
         <section id="personid">
-            <h1>PersonId</h1>
+            <h1>ID-nummer sök</h1>
 
-            <label for="p1">FysiskPersonId
-                <input id="p1" name="fysiskpersonid" type="text" value="197910312391"/>
+            <label for="p1">ID-nummer
+                <input id="p1" name="idnummer" type="text" value="197910312391"/>
             </label>
 
             <input name="sokning_personid" type="submit" value="Sök">
         </section>
 
         <section id="namnsok">
-            <h1>Persondetaljer</h1>
+            <h1>Namn/adress sök</h1>
 
             <label for="n1">FonetiskSokning
                 <input id="n1" name="fonetisksokning" type="text" value=""/>
@@ -185,10 +187,6 @@
 
             <label for="n16">KommunKod
                 <input id="n16" name="kommunkod" type="text" value=""/>
-            </label>
-
-            <label for="n17">ForsamlingKod
-                <input id="n17" name="forsamlingkod" type="text" value=""/>
             </label>
 
             <label for="n18">DistriktKod

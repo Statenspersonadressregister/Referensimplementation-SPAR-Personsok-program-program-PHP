@@ -1,13 +1,13 @@
-<html>
+<html lang="se">
 <head>
-    <title>Exempelanvändning av SPAR Personsök program-program version 2019.1</title>
+    <title>Exempelanvändning av SPAR Personsök 2021.1</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="resurser/personsok.css">
 </head>
 <body>
 <main>
-<h1 class="sidotitel">Exempelanvändning av SPAR Personsök program-program version 2019.1</h1>
+<h1 class="sidotitel">Exempelanvändning av SPAR Personsök 2021.1</h1>
 
 <?php
 require_once 'personsok_fraga.php';

@@ -3,7 +3,7 @@
 function skickaFraga()
 {
     // Skapa en array med argument, börja med identifieringsinformation
-    $argument = array("IdentifieringsInformation" => createIdentifieringsInformation());
+    $argument = array("Identifieringsinformation" => createIdentifieringsInformation());
 
     // Fyll på argument-array med själva frågan, antingen namnsök eller sökning på personid.
     if (isset($_POST['sokning_personid'])) {
@@ -32,16 +32,14 @@ function skapaSoapClient()
         'stream_context' => $streamcontext);
 
     // För att SoapClient ska läsa in filen korrekt från disk behövs en file:// länk
-    $wsdl = 'file://' . dirname(__FILE__) . DIRECTORY_SEPARATOR . 'resurser/personsok-2019.1.wsdl';
+    $wsdl = 'file://' . dirname(__FILE__) . DIRECTORY_SEPARATOR . 'resurser/personsok-2021.1.wsdl';
 
     return new SoapClient($wsdl, $options);
 }
 
 function createFragaPersonId()
 {
-    return array(
-        "PersonId" => array(
-            "FysiskPersonId" => $_POST['fysiskpersonid']));
+    return array("IdNummer" => $_POST['idnummer']);
 }
 
 function createIdentifieringsInformation()
@@ -50,14 +48,13 @@ function createIdentifieringsInformation()
     $identifieringsInformation = array(
         "KundNrLeveransMottagare" => $_POST['kundnrleveransmottagare'],
         "KundNrSlutkund" => $_POST['kundnrslutkund'],
-        "OrgNrSlutkund" => $_POST['orgnrslutkund'],
         "SlutAnvandarId" => $_POST['slutanvandarid'],
         "Tidsstampel" => $tidsstampel,
         "SlutAnvandarUtokadBehorighet" => populeraSlutanvandarBehorigheter()
     );
 
     if (!empty($_POST["uppdragsid"])) {
-        $identifieringsInformation += array("UppdragsId" => $_POST["uppdragsid"]);
+        $identifieringsInformation += array("UppdragId" => $_POST["uppdragsid"]);
     }
 
     return $identifieringsInformation;
@@ -102,7 +99,6 @@ function createFragaNamnsok()
     if (!empty($_POST['postnrtill'])) $sok += array("PostNrTill" => $_POST['postnrtill']);
     if (!empty($_POST['lankod'])) $sok += array("LanKod" => $_POST['lankod']);
     if (!empty($_POST['kommunkod'])) $sok += array("KommunKod" => $_POST['kommunkod']);
-    if (!empty($_POST['forsamlingkod'])) $sok += array("ForsamlingKod" => $_POST['forsamlingkod']);
     if (!empty($_POST['distriktkod'])) $sok += array("DistriktKod" => $_POST['distriktkod']);
     if (!empty($_POST['distriktkodfrom'])) $sok += array("DistriktKodFrom" => $_POST['distriktkodfrom']);
     if (!empty($_POST['distriktkodtom'])) $sok += array("DistriktKodTom" => $_POST['distriktkodtom']);

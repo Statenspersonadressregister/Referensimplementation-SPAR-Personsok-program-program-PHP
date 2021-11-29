@@ -12,7 +12,7 @@ function visaInternStruktur($svar)
     echo "<p class='hjalptext'>
             Nedan är SoapClients omvandling från XML-svaret till PHP minnesstruktur.</p> 
           <p class='hjalptext'>  
-            Om en struktur, tex PersonDetaljer, kan innehålla ett eller flera objekt 
+            Om en struktur, tex Persondetaljer, kan innehålla ett eller flera objekt 
             så ger SoapClient ett <em>object</em> om det är ett objekt och en
             <em>array</em> om det är flera objekt. Se källkoden för exempel.</p>";
 
@@ -29,63 +29,28 @@ function visaOmvandlatTillHtml($svar)
             översikt över hur strukturen i svaret ser ut. Rubriker som saknar värden
             kan finnas i svaret, men är inte med i detta svar.</p>";
 
-    visaOverstiger($svar);
-    visaUndantagLista($svar);
-    visaSvarsPostLista($svar);
+    visaSvarsposter($svar);
+    visaOverstigerMax($svar);
+    visaUndantag($svar);
+    visaUUID($svar);
 
     echo "</section>";
 }
 
 
-function visaOverstiger($svar)
+function visaSvarsposter($svar)
 {
-    $overstiger = $svar["OverstigerMaxAntalSvarsposter"];
-    if (isset($overstiger)) {
-        echo "Överstiger max antal sökträffar, " . $overstiger->AntalPoster . " av maximalt " . $overstiger->MaxAntalSvarsPoster . ".";
-    }
-}
-
-function visaUndantag($undantag)
-{
-    echo "<div>";
-    echo "<header>Kod</header>" . $undantag->Kod . "<br/>";
-    echo "<header>Beskrivning</header>" . $undantag->Beskrivning;
-    echo "</div>";
-}
-
-function visaUndantagLista($svar)
-{
-    $undantag = $svar["Undantag"];
-    if (isset($undantag)) {
-        echo "<section id='undantag'><h1>Undantag</h1>";
+    $svarsposter = $svar["PersonsokningSvarspost"];
+    if (isset($svarsposter)) {
+        echo "<section id='svarsposter'><h1>PersonsokningSvarsposter</h1>";
 
         // SoapClient ger ett object om det bara är ett element i svaret
         // och en array om det är flera element i svaret
-        if (is_object($undantag)) {
-            visaUndantag($undantag);
+        if (is_object($svarsposter)) {
+            visaSvarspost($svarsposter);
         } else {
-            foreach ($undantag as $u) {
-                visaUndantag($u);
-            }
-        }
-
-        echo "</section>";
-    }
-}
-
-function visaSvarsPostLista($svar)
-{
-    $svarsPoster = $svar["PersonsokningSvarsPost"];
-    if (isset($svarsPoster)) {
-        echo "<section id='svarsposter'><h1>PersonsokningSvarsPost</h1>";
-
-        // SoapClient ger ett object om det bara är ett element i svaret
-        // och en array om det är flera element i svaret
-        if (is_object($svarsPoster)) {
-            visaSvarspost($svarsPoster);
-        } else {
-            foreach ($svarsPoster as $svarsPost) {
-                visaSvarspost($svarsPost);
+            foreach ($svarsposter as $svarspost) {
+                visaSvarspost($svarspost);
             }
         }
 
@@ -95,70 +60,266 @@ function visaSvarsPostLista($svar)
 
 function visaSvarspost($svarsPost)
 {
+    echo "<header class='listheader'>PersonsokningSvarspost</header>";
     echo "<div>";
-    echo "<header>PersonId-&gt;FysiskPersonId</header>" . $svarsPost->PersonId->FysiskPersonId . "<br/>";
+    echo "<header>PersonId-&gt;IdNummer</header>" . $svarsPost->PersonId->IdNummer . "<br/>";
+    echo "<header>PersonId-&gt;Typ</header>" . $svarsPost->PersonId->Typ . "<br/>";
     echo "<header>SenasteAndringSPAR</header>" . $svarsPost->SenasteAndringSPAR . "<br/>";
     echo "<header>Sekretessmarkering</header>" . $svarsPost->Sekretessmarkering->_ . "<br/>";
-    echo "<header>SekretessAndringsdatum</header>" . $svarsPost->SekretessAndringsdatum . "<br/>";
+    echo "<header>Sekretessmarkering-&gt;sattAvSPAR</header>" . $svarsPost->Sekretessmarkering->sattAvSPAR . "<br/>";
+    echo "<header>SekretessDatum</header>" . $svarsPost->SekretessDatum . "<br/>";
     echo "<header>SkyddadFolkbokforing</header>" . $svarsPost->SkyddadFolkbokforing . "<br/>";
-    echo "<header>SkyddadFolkbokforingAndringsdatum</header>" . $svarsPost->SkyddadFolkbokforingAndringsdatum . "<br/>";
-    echo "<header>Beskattningsar</header>" . $svarsPost->Beskattningsar . "<br/>";
+    echo "<header>SkyddadFolkbokforingDatum</header>" . $svarsPost->SkyddadFolkbokforingDatum . "<br/>";
+    echo "<header>InkomstAr</header>" . $svarsPost->InkomstAr . "<br/>";
     echo "<header>SummeradInkomst</header>" . $svarsPost->SummeradInkomst;
 
-    visaPersonDetaljer($svarsPost);
-    visaRelationer($svarsPost);
-    visaFastigheter($svarsPost);
-    visaFolkbokforingsAdresser($svarsPost);
-    visaSarskildPostadresser($svarsPost);
-    visaUtlandAdresser($svarsPost);
+    visaNamn($svarsPost);
+    visaPersondetaljer($svarsPost);
+    visaFolkbokforing($svarsPost);
+    visaFolkbokforingsadress($svarsPost);
+    visaSarskildPostadress($svarsPost);
+    visaUtlandsadress($svarsPost);
+    visaKontaktadress($svarsPost);
+    visaRelation($svarsPost);
+    visaFastighet($svarsPost);
 
     echo "</div>";
 }
 
-function visaPersonDetaljer($svarsPost)
+function visaNamn($svarsPost)
 {
-    $personDetaljer = $svarsPost->Persondetaljer;
-    if (isset($personDetaljer)) {
-        echo "<header class='listheader'>Persondetaljer</header>";
+    $namn = $svarsPost->Namn;
+    if (isset($namn)) {
+        echo "<header class='listheader'>Namn</header>";
 
         // SoapClient ger ett object om det bara är ett element i svaret
         // och en array om det är flera element i svaret
-        if (is_object($personDetaljer)) {
-            visaPersonDetalj($personDetaljer);
+        if (is_object($namn)) {
+            visaNamnPost($namn);
         } else {
-            foreach ($personDetaljer as $pd) {
-                visaPersonDetalj($pd);
+            foreach ($namn as $n) {
+                visaNamnPost($n);
             }
         }
     }
 }
 
-function visaPersonDetalj($personDetalj)
+function visaNamnPost($namn)
 {
     echo "<div>";
-    echo "<header>DatumFrom</header>" . $personDetalj->DatumFrom . "<br/>";
-    echo "<header>DatumTill</header>" . $personDetalj->DatumTill . "<br/>";
-    echo "<header>Avlidendatum</header>" . $personDetalj->Avlidendatum . "<br/>";
-    echo "<header>AvregistreringsorsakKod</header>" . $personDetalj->AvregistreringsorsakKod . "<br/>";
+    echo "<header>DatumFrom</header>" . $namn->DatumFrom . "<br/>";
+    echo "<header>DatumTill</header>" . $namn->DatumTill . "<br/>";
 
-    echo "<header>Fornamn</header>" . $personDetalj->Fornamn . "<br/>";
-    echo "<header>Mellannamn</header>" . $personDetalj->Mellannamn . "<br/>";
-    echo "<header>Efternamn</header>" . $personDetalj->Efternamn . "<br/>";
-    echo "<header>Aviseringsnamn</header>" . $personDetalj->Aviseringsnamn . "<br/>";
-    echo "<header>Tilltalsnamn</header>" . $personDetalj->Tilltalsnamn . "<br/>";
+    echo "<header>Fornamn</header>" . $namn->Fornamn . "<br/>";
+    echo "<header>Mellannamn</header>" . $namn->Mellannamn . "<br/>";
+    echo "<header>Efternamn</header>" . $namn->Efternamn . "<br/>";
+    echo "<header>Aviseringsnamn</header>" . $namn->Aviseringsnamn . "<br/>";
+    echo "<header>Tilltalsnamn</header>" . $namn->Tilltalsnamn . "<br/>";
 
-    echo "<header>Fodelseforsamling</header>" . $personDetalj->Fodelseforsamling . "<br/>";
-    echo "<header>Fodelsetid</header>" . $personDetalj->Fodelsetid . "<br/>";
-    echo "<header>FodelselanKod</header>" . $personDetalj->FodelselanKod . "<br/>";
-
-    echo "<header>HanvisningsPersonNrByttFran</header>" . $personDetalj->HanvisningsPersonNrByttFran . "<br/>";
-    echo "<header>HanvisningsPersonNrByttTill</header>" . $personDetalj->HanvisningsPersonNrByttTill . "<br/>";
-    echo "<header>Sekretessmarkering</header>" . $personDetalj->Sekretessmarkering->_ . "<br/>";
-    echo "<header>Kon</header>" . $personDetalj->Kon;
     echo "</div>";
 }
 
-function visaRelationer($svarsPost)
+function visaPersondetaljer($svarsPost)
+{
+    $persondetaljer = $svarsPost->Persondetaljer;
+    if (isset($persondetaljer)) {
+        echo "<header class='listheader'>Persondetaljer</header>";
+
+        // SoapClient ger ett object om det bara är ett element i svaret
+        // och en array om det är flera element i svaret
+        if (is_object($persondetaljer)) {
+            visaPersondetaljerPost($persondetaljer);
+        } else {
+            foreach ($persondetaljer as $pd) {
+                visaPersondetaljerPost($pd);
+            }
+        }
+    }
+}
+
+function visaPersondetaljerPost($pdt)
+{
+    echo "<div>";
+    echo "<header>DatumFrom</header>" . $pdt->DatumFrom . "<br/>";
+    echo "<header>DatumTill</header>" . $pdt->DatumTill . "<br/>";
+
+    echo "<header>Sekretessmarkering</header>" . $pdt->Sekretessmarkering->_ . "<br/>";
+    echo "<header>Sekretessmarkering-&gt;sattAvSPAR</header>" . $pdt->Sekretessmarkering->sattAvSPAR . "<br/>";
+    echo "<header>SkyddadFolkbokforing</header>" . $pdt->SkyddadFolkbokforing . "<br/>";
+
+    echo "<header>AvregistreringsorsakKod</header>" . $pdt->AvregistreringsorsakKod . "<br/>";
+    echo "<header>Avregistreringsdatum</header>" . $pdt->Avregistreringsdatum . "<br/>";
+    echo "<header>Avlidendatum</header>" . $pdt->Avlidendatum . "<br/>";
+    echo "<header>AntraffadDodDatum</header>" . $pdt->AntraffadDodDatum . "<br/>";
+
+    echo "<header>Fodelsedatum</header>" . $pdt->Fodelsedatum . "<br/>";
+    echo "<header>FodelselanKod</header>" . $pdt->FodelselanKod . "<br/>";
+    echo "<header>Fodelseforsamling</header>" . $pdt->Fodelseforsamling . "<br/>";
+
+    echo "<header>Kon</header>" . $pdt->Kon . "<br/>";;
+    echo "<header>SvenskMedborgare</header>" . $pdt->SvenskMedborgare . "<br/>";;
+
+    echo "<header>SnStatus</header>" . $pdt->SnStatus . "<br/>";
+    echo "<header>SnTilldelningsdatum</header>" . $pdt->SnTilldelningsdatum . "<br/>";
+    echo "<header>SnPreliminartVilandeforklaringsdatum</header>" . $pdt->SnPreliminartVilandeforklaringsdatum . "<br/>";
+    echo "<header>SnFornyelsedatum</header>" . $pdt->SnFornyelsedatum . "<br/>";
+    echo "<header>SnVilandeorsak</header>" . $pdt->SnVilandeorsak . "<br/>";
+    echo "<header>SnVilandeforklaringsdatum</header>" . $pdt->SnVilandeforklaringsdatum . "<br/>";
+    echo "<header>SnAvlidendatum</header>" . $pdt->SnAvlidendatum . "<br/>";
+
+    visaHanvisningar($pdt);
+
+    echo "</div>";
+}
+
+function visaHanvisningar($persondetalj)
+{
+    $hanvisningar = $persondetalj->Hanvisning;
+    if (isset($hanvisningar)) {
+        // SoapClient ger ett object om det bara är ett element i svaret
+        // och en array om det är flera element i svaret
+        if (is_object($hanvisningar)) {
+            visaHanvisning($hanvisningar);
+        } else {
+            foreach ($hanvisningar as $hnv) {
+                visaHanvisning($hnv);
+            }
+        }
+    }
+}
+
+function visaHanvisning($hnv)
+{
+    if (isset($hnv)) {
+        echo "<header>Hanvisning-&gt;IdNummer</header>" . $hnv->IdNummer . "<br/>";
+        echo "<header>Hanvisning-&gt;Typ</header>" . $hnv->Typ . "<br/>";
+    }
+}
+
+function visaFolkbokforing($svarsPost)
+{
+    $folkbokforing = $svarsPost->Folkbokforing;
+    if (isset($folkbokforing)) {
+        echo "<header class='listheader'>Folkbokforing</header>";
+
+        // SoapClient ger ett object om det bara är ett element i svaret
+        // och en array om det är flera element i svaret
+        if (is_object($folkbokforing)) {
+            visaFolkbokforingPost($folkbokforing);
+        } else {
+            foreach ($folkbokforing as $a) {
+                visaFolkbokforingPost($a);
+            }
+        }
+    }
+}
+
+function visaFolkbokforingPost($folkbokforing)
+{
+    echo "<div>";
+    echo "<header>DatumFrom</header>" . $folkbokforing->DatumFrom . "<br/>";
+    echo "<header>DatumTill</header>" . $folkbokforing->DatumTill . "<br/>";
+    echo "<header>FolkbokfordLanKod</header>" . $folkbokforing->FolkbokfordLanKod . "<br/>";
+    echo "<header>FolkbokfordKommunKod</header>" . $folkbokforing->FolkbokfordKommunKod . "<br/>";
+    echo "<header>Hemvist</header>" . $folkbokforing->Hemvist . "<br/>";
+    echo "<header>Folkbokforingsdatum</header>" . $folkbokforing->Folkbokforingsdatum . "<br/>";
+    echo "<header>DistriktKod</header>" . $folkbokforing->DistriktKod . "<br/>";
+    echo "</div>";
+}
+
+function visaFolkbokforingsadress($svarsPost)
+{
+    $fba = $svarsPost->Folkbokforingsadress;
+    if (isset($fba)) {
+        echo "<header class='listheader'>Folkbokforingsadress</header>";
+        // Folkbokföringsadress finns bara som SvenskAdress, men vi använder den generella metoden
+        // som kan skriva ut såväl Svensk som Internationell adress.
+        visaAdresser($fba);
+    }
+}
+
+function visaSarskildPostadress($svarsPost)
+{
+    $spa = $svarsPost->SarskildPostadress;
+    if (isset($spa)) {
+        echo "<header class='listheader'>Särskild postadress</header>";
+        // Särskild postadress finns som såväl Svensk som InternationellAdress
+        visaAdresser($spa);
+    }
+}
+
+function visaUtlandsadress($svarsPost)
+{
+    $ua = $svarsPost->Utlandsadress;
+    if (isset($ua)) {
+        echo "<header class='listheader'>Utlandsadress</header>";
+        // Utlandsadress finns bara som InternationellAdress, men vi använder den generella metoden
+        // som kan skriva ut såväl Svensk som Internationell adress.
+        visaAdresser($ua);
+    }
+}
+
+function visaKontaktadress($svarsPost)
+{
+    $ka = $svarsPost->Kontaktadress;
+    if (isset($ka)) {
+        echo "<header class='listheader'>Kontaktadress</header>";
+        // Kontaktadress finns som såväl Svensk som InternationellAdress
+        visaAdresser($ka);
+    }
+}
+
+function visaAdresser($adresser)
+{
+    // SoapClient ger ett object om det bara är ett element i svaret
+    // och en array om det är flera element i svaret
+    if (is_object($adresser)) {
+        visaAdressPost($adresser);
+    } else {
+        foreach ($adresser as $a) {
+            visaAdressPost($a);
+        }
+    }
+}
+
+function visaAdressPost($adress)
+{
+    if (isset($adress->SvenskAdress)) {
+        visaSvenskAdress($adress->SvenskAdress);
+    }
+    if (isset($adress->InternationellAdress)) {
+        visaInternationellAdress($adress->InternationellAdress);
+    }
+}
+
+function visaSvenskAdress($address)
+{
+    echo "<div>";
+    echo "<header class='itemheader'>Svensk adress</header> <br/>";
+    echo "<header>DatumFrom</header>" . $address->DatumFrom . "<br/>";
+    echo "<header>DatumTill</header>" . $address->DatumTill . "<br/>";
+    echo "<header>CareOf</header>" . $address->CareOf . "<br/>";
+    echo "<header>Utdelningsadress1</header>" . $address->Utdelningsadress1 . "<br/>";
+    echo "<header>Utdelningsadress2</header>" . $address->Utdelningsadress2 . "<br/>";
+    echo "<header>PostNr</header>" . $address->PostNr . "<br/>";
+    echo "<header>Postort</header>" . $address->Postort;
+    echo "</div>";
+}
+
+function visaInternationellAdress($address)
+{
+    echo "<div>";
+    echo "<header class='itemheader'>Internationell adress</header> <br/>";
+    echo "<header>DatumFrom</header>" . $address->DatumFrom . "<br/>";
+    echo "<header>DatumTill</header>" . $address->DatumTill . "<br/>";
+    echo "<header>Utdelningsadress1</header>" . $address->Utdelningsadress1 . "<br/>";
+    echo "<header>Utdelningsadress2</header>" . $address->Utdelningsadress2 . "<br/>";
+    echo "<header>Utdelningsadress3</header>" . $address->Utdelningsadress3 . "<br/>";
+    echo "<header>Land</header>" . $address->Land;
+    echo "</div>";
+}
+
+function visaRelation($svarsPost)
 {
     $relationer = $svarsPost->Relation;
     if (isset($relationer)) {
@@ -167,23 +328,23 @@ function visaRelationer($svarsPost)
         // SoapClient ger ett object om det bara är ett element i svaret
         // och en array om det är flera element i svaret
         if (is_object($relationer)) {
-            visaRelation($relationer);
+            visaRelationPost($relationer);
         } else {
             foreach ($relationer as $r) {
-                visaRelation($r);
+                visaRelationPost($r);
             }
         }
     }
 }
 
-function visaRelation($relation)
+function visaRelationPost($relation)
 {
     echo "<div>";
     echo "<header>DatumFrom</header>" . $relation->DatumFrom . "<br/>";
     echo "<header>DatumTill</header>" . $relation->DatumTill . "<br/>";
     echo "<header>Relationstyp</header>" . $relation->Relationstyp . "<br/>";
 
-    echo "<header>PersonId-&gt;FysiskPersonId</header>" . $relation->PersonId->FysiskPersonId . "<br/>";
+    echo "<header>PersonId-&gt;ID-nummer</header>" . $relation->PersonId->IdNummer . "<br/>";
     echo "<header>Fodelsetid</header>" . $relation->Fodelsetid . "<br/>";
 
     echo "<header>Avregistreringsdatum</header>" . $relation->Avregistreringsdatum . "<br/>";
@@ -195,7 +356,7 @@ function visaRelation($relation)
     echo "</div>";
 }
 
-function visaFastigheter($svarsPost)
+function visaFastighet($svarsPost)
 {
     $fastigheter = $svarsPost->Fastighet;
     if (isset($fastigheter)) {
@@ -204,16 +365,16 @@ function visaFastigheter($svarsPost)
         // SoapClient ger ett object om det bara är ett element i svaret
         // och en array om det är flera element i svaret
         if (is_object($fastigheter)) {
-            visaFastighet($fastigheter);
+            visaFastighetPost($fastigheter);
         } else {
             foreach ($fastigheter as $f) {
-                visaFastighet($f);
+                visaFastighetPost($f);
             }
         }
     }
 }
 
-function visaFastighet($fastighet)
+function visaFastighetPost($fastighet)
 {
     echo "<div>";
     echo "<header>FastighetBeteckning</header>" . $fastighet->FastighetBeteckning . "<br/>";
@@ -258,103 +419,42 @@ function visaFastighetsDel($fastighetsdel)
     echo "</div>";
 }
 
-function visaFolkbokforingsAdresser($svarsPost)
-{
-    $addresser = $svarsPost->Folkbokforingsadress;
-    if (isset($addresser)) {
-        echo "<header class='listheader'>Folkbokforingsadress</header>";
 
-        // SoapClient ger ett object om det bara är ett element i svaret
-        // och en array om det är flera element i svaret
-        if (is_object($addresser)) {
-            visaFolkbokforingsAdress($addresser);
-        } else {
-            foreach ($addresser as $a) {
-                visaFolkbokforingsAdress($a);
-            }
-        }
+function visaOverstigerMax($svar)
+{
+    $overstiger = $svar["OverstigerMaxAntalSvarsposter"];
+    if (isset($overstiger)) {
+        echo "<section id='undantag'><h1>OverstigerMaxAntalSvarsposter</h1>";
+        echo "<div>";
+        echo "<header>AntalPoster</header>" . $overstiger->AntalPoster . "<br/>";
+        echo "<header>Max antal</header>" . $overstiger->MaxAntalSvarsposter . "<br/>";
+        echo "</div>";
+        echo "</section>";
     }
 }
 
-function visaFolkbokforingsAdress($address)
+function visaUndantag($svar)
 {
-    echo "<div>";
-    echo "<header>DatumFrom</header>" . $address->DatumFrom . "<br/>";
-    echo "<header>DatumTill</header>" . $address->DatumTill . "<br/>";
-    echo "<header>CareOf</header>" . $address->CareOf . "<br/>";
-    echo "<header>Utdelningsadress1</header>" . $address->Utdelningsadress1 . "<br/>";
-    echo "<header>Utdelningsadress2</header>" . $address->Utdelningsadress2 . "<br/>";
-    echo "<header>PostNr</header>" . $address->PostNr . "<br/>";
-    echo "<header>Postort</header>" . $address->Postort . "<br/>";
-    echo "<header>Folkbokforingsdatum</header>" . $address->Folkbokforingsdatum . "<br/>";
-    echo "<header>FolkbokfordForsamlingKod</header>" . $address->FolkbokfordForsamlingKod . "<br/>";
-    echo "<header>DistriktKod</header>" . $address->DistriktKod . "<br/>";
-    echo "<header>FolkbokfordKommunKod</header>" . $address->FolkbokfordKommunKod . "<br/>";
-    echo "<header>FolkbokfordLanKod</header>" . $address->FolkbokfordLanKod;
-    echo "</div>";
-}
-
-function visaSarskildPostadresser($svarsPost)
-{
-    $addresser = $svarsPost->SarskildPostadress;
-    if (isset($addresser)) {
-        echo "<header class='listheader'>SarskildPostadress</header>";
-
-        // SoapClient ger ett object om det bara är ett element i svaret
-        // och en array om det är flera element i svaret
-        if (is_object($addresser)) {
-            visaSarskildPostadress($addresser);
-        } else {
-            foreach ($addresser as $a) {
-                visaSarskildPostadress($a);
-            }
-        }
+    $undantag = $svar["Undantag"];
+    if (isset($undantag)) {
+        echo "<section id='undantag'><h1>Undantag</h1>";
+        echo "<div>";
+        echo "<header>Kod</header>" . $undantag->Kod . "<br/>";
+        echo "<header>Beskrivning</header>" . $undantag->Beskrivning . "<br/>";
+        echo "</div>";
+        echo "</section>";
     }
 }
 
-function visaSarskildPostadress($address)
+function visaUUID($svar)
 {
-    echo "<div>";
-    echo "<header>DatumFrom</header>" . $address->DatumFrom . "<br/>";
-    echo "<header>DatumTill</header>" . $address->DatumTill . "<br/>";
-    echo "<header>CareOf</header>" . $address->CareOf . "<br/>";
-    echo "<header>Utdelningsadress1</header>" . $address->Utdelningsadress1 . "<br/>";
-    echo "<header>Utdelningsadress2</header>" . $address->Utdelningsadress2 . "<br/>";
-    echo "<header>PostNr</header>" . $address->PostNr . "<br/>";
-    echo "<header>Postort</header>" . $address->Postort;
-    echo "</div>";
-}
-
-function visaUtlandAdresser($svarsPost)
-{
-    $addresser = $svarsPost->Utlandsadress;
-    if (isset($addresser)) {
-        echo "<header class='listheader'>Utlandsadress</header>";
-
-        // SoapClient ger ett object om det bara är ett element i svaret
-        // och en array om det är flera element i svaret
-        if (is_object($addresser)) {
-            visaUtlandAdress($addresser);
-        } else {
-            foreach ($addresser as $a) {
-                visaUtlandAdress($a);
-            }
-        }
+    $uuid = $svar["UUID"];
+    if (isset($uuid)) {
+        echo "<section id='uuid'><h1>UUID</h1>";
+        echo "<div>";
+        echo "<header>UUID</header>" . $uuid;
+        echo "</div>";
+        echo "</section>";
     }
-}
-
-function visaUtlandAdress($address)
-{
-    echo "<div>";
-    echo "<header>DatumFrom</header>" . $address->DatumFrom . "<br/>";
-    echo "<header>DatumTill</header>" . $address->DatumTill . "<br/>";
-    echo "<header>CareOf</header>" . $address->CareOf . "<br/>";
-    echo "<header>Utdelningsadress1</header>" . $address->Utdelningsadress1 . "<br/>";
-    echo "<header>Utdelningsadress2</header>" . $address->Utdelningsadress2 . "<br/>";
-    echo "<header>Utdelningsadress3</header>" . $address->Utdelningsadress3 . "<br/>";
-    echo "<header>PostNr</header>" . $address->PostNr . "<br/>";
-    echo "<header>Postort</header>" . $address->Postort . "<br/>";
-    echo "<header>Land</header>" . $address->Land;
-    echo "</div>";
 }
 

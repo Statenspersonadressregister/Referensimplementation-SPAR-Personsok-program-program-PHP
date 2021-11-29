@@ -162,6 +162,10 @@ header.listheader {
     text-decoration: underline;
 }
 
+header.itemheader {
+    text-decoration: underline;
+}
+
 p.hjalptext {
     font-style: italic;
     font-size: 90%;
