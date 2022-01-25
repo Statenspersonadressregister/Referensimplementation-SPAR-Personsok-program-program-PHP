@@ -15,7 +15,7 @@
 
     function giltigtPersonId() {
         rensaAllaSokFalt();
-        document.getElementsByName("idnummer")[0].value = "197910312391";
+        document.getElementsByName("idnummer")[0].value = "198111309285";
     }
 
     function skapaSoapFel() {
@@ -32,7 +32,7 @@
     function forMangaTraffar() {
         rensaAllaSokFalt();
         document.getElementsByName("fonetisksokning")[0].value = "JA";
-        document.getElementsByName("namnsokargument")[0].value = "an*";
+        document.getElementsByName("namnsokargument")[0].value = "efternamn*";
     }
 
     function skapaUndantag() {
@@ -120,7 +120,7 @@
             <h1>ID-nummer sök</h1>
 
             <label for="p1">ID-nummer
-                <input id="p1" name="idnummer" type="text" value="197910312391"/>
+                <input id="p1" name="idnummer" type="text" value="198111309285"/>
             </label>
 
             <input name="sokning_personid" type="submit" value="Sök">
