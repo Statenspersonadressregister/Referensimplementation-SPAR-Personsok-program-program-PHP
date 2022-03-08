@@ -44,12 +44,10 @@ function createFragaPersonId()
 
 function createIdentifieringsInformation()
 {
-    $tidsstampel = date('Y-m-d') . 'T' . date('H:i:s') . ".000";
     $identifieringsInformation = array(
         "KundNrLeveransMottagare" => $_POST['kundnrleveransmottagare'],
         "KundNrSlutkund" => $_POST['kundnrslutkund'],
         "SlutAnvandarId" => $_POST['slutanvandarid'],
-        "Tidsstampel" => $tidsstampel,
         "SlutAnvandarUtokadBehorighet" => populeraSlutanvandarBehorigheter()
     );
 
