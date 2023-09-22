@@ -22,7 +22,7 @@ function skapaSoapClient()
         'local_cert' => $_POST['certifikat'],
         'verify_peer' => true,
         'cafile' => $_POST['ca'],
-        'CN_match' => 'kt-ext-portwise.statenspersonadressregister.se');
+        'CN_match' => 'test-personsok.statenspersonadressregister.se');
 
     $streamcontext = stream_context_create(
         array('ssl' => $sslOptions));

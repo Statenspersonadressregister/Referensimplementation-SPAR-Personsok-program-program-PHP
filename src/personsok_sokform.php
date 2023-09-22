@@ -69,7 +69,7 @@
         <section id="kommunikation">
             <h1>Kommunikationsparametrar för SOAP-anropet</h1>
             <label for="k1"> URL till tjänst</label>
-            <input id="k1" name="url" type="text" value="https://kt-ext-ws.statenspersonadressregister.se/2021.1/"/>
+            <input id="k1" name="url" type="text" value="https://test-personsok.statenspersonadressregister.se/2021.1/"/>
 
             <label for="k2">Klientcertifikat (PEM)
                 <input id="k2" name="certifikat" type="text" value="resurser/Kommun_A.pem"/>
