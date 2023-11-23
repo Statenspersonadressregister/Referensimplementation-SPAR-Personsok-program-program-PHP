@@ -1,5 +1,8 @@
 # Referensimplementation SPAR Personsök program-program
 
+> **Obeservera:** Referensimplementationer för senare versioner av SPAR Personsök program-program finns på https://www.statenspersonadressregister.se  
+> Denna Github-organisation kommer att upphöra per 2024-05-31.
+
 Denna källkod är en referensimplementation av SPAR Personsök program-program version _2021.1_.
 
 Referensimplementationen använder _PHP5_ och dess stöd för _SOAP_, 
@@ -26,9 +29,16 @@ detta för att i ett tidigt skede verifiera att certifikatet är korrekt.
 
 ## Produktionsmiljö
 
-Om koden används för att integrera mot produktionsmiljön krävs ett giltigt organisationscertifikat, det inkluderade
-testcertifikatet fungerar endast i kundtestmiljön. Även identifieringsinformation behöver vara giltig, se
-_KundNrLeveransMottagare_, _KundNrSlutkund_ och _UppdragId_. För mer information kontakta SPAR:s kundtjänst.
+Om koden används för att integrera mot produktionsmiljönn krävs:
+ * Ett giltigt organisationscertifikat (det inkluderade testcertifikatet fungerar endast i kundtestmiljön). 
+ * Korrekt indetifieringsinformation, se
+ * _KundNrLeveransMottagare_
+ * _KundNrSlutkund_
+ * _UppdragId_
+ 
+För mer information kontakta SPAR:s kundtjänst.
+
+För att gå mot produktion behöver URL ändras från kundtest-URL: https://test-personsok.statenspersonadressregister.se/2021.1/ till produktions-URL: https://personsok.statenspersonadressregister.se/2021.1/
 
 Om verifiering av _CN_match_ används behöver den uppdateras för produktion.
 
